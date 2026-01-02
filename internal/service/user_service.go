@@ -1,0 +1,153 @@
+package service
+
+import (
+	"errors"
+	"strconv"
+
+	"github.com/falasefemi2/vendorhub/internal/dto"
+	"github.com/falasefemi2/vendorhub/internal/models"
+	"github.com/falasefemi2/vendorhub/internal/utils"
+)
+
+type UserRepository interface {
+	CreateUser(user *models.User) (*models.User, error)
+	GetByEmail(email string) (*models.User, error)
+	GetByID(id string) (*models.User, error)
+	ApproveVendor(id string) error
+	GetByStoreSlug(slug string) (*models.User, error)
+	UpdateStoreSettings(userID, storeName, storeSlug, bio, whatsapp string) error
+}
+
+type AuthService struct {
+	userRepo  UserRepository
+	jwtSecret string
+}
+
+func NewAuthService(userRepo UserRepository, jwtSecret string) *AuthService {
+	return &AuthService{
+		userRepo:  userRepo,
+		jwtSecret: jwtSecret,
+	}
+}
+
+func (s *AuthService) SignUp(req dto.SignUpRequest) (*dto.AuthResponse, error) {
+	_, err := s.userRepo.GetByEmail(req.Email)
+	if err == nil {
+		return nil, errors.New("email already exists")
+	}
+
+	hash, err := utils.HashPassword(req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	// generate slug and ensure uniqueness
+	baseSlug := utils.GenerateSlug(req.StoreName)
+	slug := baseSlug
+	i := 1
+	for {
+		if existing, _ := s.userRepo.GetByStoreSlug(slug); existing == nil {
+			break
+		}
+		i++
+		slug = baseSlug + "-" + strconv.Itoa(i)
+	}
+
+	user := &models.User{
+		Name:           req.Name,
+		Email:          req.Email,
+		PasswordHash:   hash,
+		WhatsappNumber: req.WhatsappNumber,
+		Username:       req.Username,
+		Bio:            req.Bio,
+		StoreName:      req.StoreName,
+		StoreSlug:      slug,
+		Role:           "vendor",
+		IsActive:       false,
+	}
+
+	createdUser, err := s.userRepo.CreateUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	authUser := dto.AuthUser{
+		ID:             createdUser.ID,
+		Name:           createdUser.Name,
+		Email:          createdUser.Email,
+		Username:       createdUser.Username,
+		Role:           createdUser.Role,
+		StoreName:      createdUser.StoreName,
+		StoreSlug:      createdUser.StoreSlug,
+		WhatsappNumber: createdUser.WhatsappNumber,
+		Bio:            createdUser.Bio,
+	}
+
+	return &dto.AuthResponse{
+		Token: "", User: authUser,
+	}, nil
+}
+
+func (s *AuthService) Login(req dto.LoginRequest) (*dto.AuthResponse, error) {
+	user, err := s.userRepo.GetByEmail(req.Email)
+	if err != nil {
+		if errors.Is(err, utils.ErrUserNotFound) {
+			return nil, utils.ErrInvalidCredentials
+		}
+		return nil, err
+	}
+
+	if !user.IsActive {
+		return nil, utils.ErrAccountNotActive
+	}
+
+	if !utils.ComparePassword(user.PasswordHash, req.Password) {
+		return nil, utils.ErrInvalidCredentials
+	}
+
+	token, err := utils.GenerateJwt(user)
+	if err != nil {
+		return nil, err
+	}
+
+	authUser := dto.AuthUser{
+		ID:             user.ID,
+		Name:           user.Name,
+		Email:          user.Email,
+		Username:       user.Username,
+		StoreName:      user.StoreName,
+		StoreSlug:      user.StoreSlug,
+		Role:           user.Role,
+		WhatsappNumber: user.WhatsappNumber,
+		Bio:            user.Bio,
+	}
+
+	return &dto.AuthResponse{
+		Token: token,
+		User:  authUser,
+	}, nil
+}
+
+func (s *AuthService) GetMyProfile(id string) (*dto.AuthUser, error) {
+	user, err := s.userRepo.GetByID(id)
+	if err != nil {
+		if errors.Is(err, utils.ErrUserNotFound) {
+			return nil, utils.ErrUnauthorized
+		}
+		return nil, err
+	}
+
+	authUser := &dto.AuthUser{
+		ID:             user.ID,
+		Name:           user.Name,
+		Email:          user.Email,
+		Username:       user.Username,
+		StoreName:      user.StoreName,
+		StoreSlug:      user.StoreSlug,
+		Role:           user.Role,
+		WhatsappNumber: user.WhatsappNumber,
+		Bio:            user.Bio,
+	}
+
+	return authUser, nil
+}
