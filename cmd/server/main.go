@@ -12,6 +12,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	_ "github.com/falasefemi2/vendorhub/docs"
+	httpSwagger "github.com/swaggo/http-swagger"
+
 	"github.com/falasefemi2/vendorhub/internal/config"
 	"github.com/falasefemi2/vendorhub/internal/db"
 	"github.com/falasefemi2/vendorhub/internal/handlers"
@@ -20,6 +23,20 @@ import (
 	"github.com/falasefemi2/vendorhub/internal/service"
 )
 
+// @title VendorHub API
+// @version 1.0
+// @description This is a sample server for a vendor hub.
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:8080
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	config.Load()
 	connString := config.GetDBURL()
@@ -51,6 +68,8 @@ func main() {
 			log.Printf("Error writing health check response: %v", err)
 		}
 	})
+
+	r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/signup", authHandler.SignUp)
