@@ -17,6 +17,17 @@ func NewAuthHandler(auth *service.AuthService) *AuthHandler {
 	return &AuthHandler{authService: auth}
 }
 
+// SignUp godoc
+// @Summary      Sign up a new user
+// @Description  Creates a new user with the provided details
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        body body dto.SignUpRequest true "Sign Up Request"
+// @Success      201  {object}  dto.AuthResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /auth/signup [post]
 func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	var req dto.SignUpRequest
 
@@ -37,6 +48,18 @@ func (h *AuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusCreated, user)
 }
 
+// Login godoc
+// @Summary      Logs in a user
+// @Description  Logs in a user and returns a JWT token
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        body body dto.LoginRequest true "Login Request"
+// @Success      200  {object}  dto.AuthResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /auth/login [post]
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req dto.LoginRequest
 
@@ -54,6 +77,17 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, token)
 }
 
+// GetMyProfile godoc
+// @Summary      Get user profile
+// @Description  Get the profile of the currently logged-in user
+// @Tags         Auth
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Success      200  {object}  dto.AuthUser
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /me [get]
 func (h *AuthHandler) GetMyProfile(w http.ResponseWriter, r *http.Request) {
 	userID, err := utils.GetUserIDFromContext(r.Context())
 	if err != nil {

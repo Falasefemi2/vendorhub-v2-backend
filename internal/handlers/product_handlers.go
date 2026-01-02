@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"github.com/falasefemi2/vendorhub/internal/dto"
 	"github.com/falasefemi2/vendorhub/internal/service"
 	"github.com/falasefemi2/vendorhub/internal/utils"
@@ -17,8 +19,20 @@ func NewProductHandler(service *service.ProductService) *ProductHandler {
 	return &ProductHandler{service: service}
 }
 
-// CreateProduct creates a new product
-// POST /products
+// CreateProduct godoc
+// @Summary      Create a new product
+// @Description  Creates a new product for the authenticated vendor
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        body body dto.CreateProductRequest true "Create Product Request"
+// @Success      201  {object}  dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products [post]
 func (ph *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	vendorID, err := utils.GetUserIDFromContext(r.Context())
 	if err != nil {
@@ -53,8 +67,17 @@ func (ph *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) 
 	utils.WriteJSON(w, http.StatusCreated, response)
 }
 
-// GetProduct retrieves a single product by ID
-// GET /products?id={productId}
+// GetProduct godoc
+// @Summary      Get a product by ID
+// @Description  Retrieves a single product by its ID
+// @Tags         Products
+// @Produce      json
+// @Param        id   query      string  true  "Product ID"
+// @Success      200  {object}  dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products [get]
 func (ph *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	productID := r.URL.Query().Get("id")
 	if productID == "" {
@@ -71,8 +94,17 @@ func (ph *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
-// GetUserProducts retrieves all products for authenticated vendor
-// GET /products/my
+// GetUserProducts godoc
+// @Summary      Get authenticated vendor's products
+// @Description  Retrieves all products for the currently authenticated vendor
+// @Tags         Products
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/my [get]
 func (ph *ProductHandler) GetUserProducts(w http.ResponseWriter, r *http.Request) {
 	vendorID, err := utils.GetUserIDFromContext(r.Context())
 	if err != nil {
@@ -100,10 +132,19 @@ func (ph *ProductHandler) GetUserProducts(w http.ResponseWriter, r *http.Request
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
-// GetVendorProducts retrieves all products for a specific vendor
-// GET /vendors/{id}/products
+// GetVendorProducts godoc
+// @Summary      Get a vendor's products
+// @Description  Retrieves all products for a specific vendor
+// @Tags         Products
+// @Produce      json
+// @Param        id   path      string  true  "Vendor ID"
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /vendors/{id}/products [get]
 func (ph *ProductHandler) GetVendorProducts(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.URL.Query().Get("vendor_id")
+	vendorID := chi.URLParam(r, "id")
 	if vendorID == "" {
 		utils.WriteError(w, http.StatusBadRequest, "vendor_id is required")
 		return
@@ -118,10 +159,24 @@ func (ph *ProductHandler) GetVendorProducts(w http.ResponseWriter, r *http.Reque
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
-// UpdateProduct updates an existing product
-// PUT /products?id={productId}
+// UpdateProduct godoc
+// @Summary      Update a product
+// @Description  Updates an existing product for the authenticated vendor
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        id   path      string  true  "Product ID"
+// @Param        body body      dto.UpdateProductRequest true "Update Product Request"
+// @Success      200  {object}  dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/{id} [put]
 func (ph *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
+	productID := chi.URLParam(r, "id")
 	if productID == "" {
 		utils.WriteError(w, http.StatusBadRequest, "product id is required")
 		return
@@ -164,10 +219,22 @@ func (ph *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) 
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
-// DeleteProduct deletes a product
-// DELETE /products?id={productId}
+// DeleteProduct godoc
+// @Summary      Delete a product
+// @Description  Deletes a product for the authenticated vendor
+// @Tags         Products
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        id   path      string  true  "Product ID"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/{id} [delete]
 func (ph *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
+	productID := chi.URLParam(r, "id")
 	if productID == "" {
 		utils.WriteError(w, http.StatusBadRequest, "product id is required")
 		return
@@ -203,8 +270,14 @@ func (ph *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) 
 	utils.WriteJSON(w, http.StatusOK, map[string]string{"message": "product deleted successfully"})
 }
 
-// GetActiveProducts retrieves all active products
-// GET /products/active
+// GetActiveProducts godoc
+// @Summary      Get active products
+// @Description  Retrieves all active products
+// @Tags         Products
+// @Produce      json
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/active [get]
 func (ph *ProductHandler) GetActiveProducts(w http.ResponseWriter, r *http.Request) {
 	responses, err := ph.service.GetActiveProducts(r.Context())
 	if err != nil {
@@ -215,10 +288,19 @@ func (ph *ProductHandler) GetActiveProducts(w http.ResponseWriter, r *http.Reque
 	utils.WriteJSON(w, http.StatusOK, responses)
 }
 
-// GetActiveUserProducts retrieves all active products for a vendor
-// GET /products/active?vendor_id={vendorId}
+// GetActiveUserProducts godoc
+// @Summary      Get active products for a vendor
+// @Description  Retrieves all active products for a specific vendor
+// @Tags         Products
+// @Produce      json
+// @Param        id   path      string  true  "Vendor ID"
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /vendors/{id}/products/active [get]
 func (ph *ProductHandler) GetActiveUserProducts(w http.ResponseWriter, r *http.Request) {
-	vendorID := r.URL.Query().Get("vendor_id")
+	vendorID := chi.URLParam(r, "id")
 	if vendorID == "" {
 		utils.WriteError(w, http.StatusBadRequest, "vendor_id is required")
 		return
@@ -233,10 +315,24 @@ func (ph *ProductHandler) GetActiveUserProducts(w http.ResponseWriter, r *http.R
 	utils.WriteJSON(w, http.StatusOK, responses)
 }
 
-// ToggleProductStatus toggles a product's active status
-// PUT /products?id={productId}&status={true|false}
+// ToggleProductStatus godoc
+// @Summary      Toggle a product's active status
+// @Description  Toggles a product's active status for the authenticated vendor
+// @Tags         Products
+// @Accept       json
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        id   path      string  true  "Product ID"
+// @Param        body body      dto.ToggleProductStatusRequest  true  "Toggle Status Request"
+// @Success      200  {object}  dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/{id}/status [put]
 func (ph *ProductHandler) ToggleProductStatus(w http.ResponseWriter, r *http.Request) {
-	productID := r.URL.Query().Get("id")
+	productID := chi.URLParam(r, "id")
 	if productID == "" {
 		utils.WriteError(w, http.StatusBadRequest, "product id is required")
 		return
@@ -258,11 +354,7 @@ func (ph *ProductHandler) ToggleProductStatus(w http.ResponseWriter, r *http.Req
 		utils.WriteError(w, http.StatusForbidden, "only vendors can toggle product status")
 		return
 	}
-
-	var req struct {
-		IsActive bool `json:"is_active"`
-	}
-
+	var req dto.ToggleProductStatusRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, "invalid request body")
 		return
@@ -282,8 +374,16 @@ func (ph *ProductHandler) ToggleProductStatus(w http.ResponseWriter, r *http.Req
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
-// SearchProducts searches for products
-// GET /products/search?q={searchTerm}
+// SearchProducts godoc
+// @Summary      Search for products
+// @Description  Searches for products by a search term
+// @Tags         Products
+// @Produce      json
+// @Param        q    query     string  true  "Search Term"
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/search [get]
 func (ph *ProductHandler) SearchProducts(w http.ResponseWriter, r *http.Request) {
 	searchTerm := r.URL.Query().Get("q")
 	if searchTerm == "" {
@@ -300,8 +400,17 @@ func (ph *ProductHandler) SearchProducts(w http.ResponseWriter, r *http.Request)
 	utils.WriteJSON(w, http.StatusOK, responses)
 }
 
-// GetProductsByPriceRange retrieves products within a price range
-// GET /products/price?min={minPrice}&max={maxPrice}
+// GetProductsByPriceRange godoc
+// @Summary      Get products by price range
+// @Description  Retrieves products within a specified price range
+// @Tags         Products
+// @Produce      json
+// @Param        min  query     number  true  "Minimum Price"
+// @Param        max  query     number  true  "Maximum Price"
+// @Success      200  {array}   dto.ProductResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/price [get]
 func (ph *ProductHandler) GetProductsByPriceRange(w http.ResponseWriter, r *http.Request) {
 	minPriceStr := r.URL.Query().Get("min")
 	maxPriceStr := r.URL.Query().Get("max")

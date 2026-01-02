@@ -1,0 +1,739 @@
+basePath: /
+definitions:
+  dto.AuthResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/dto.AuthUser'
+    type: object
+  dto.AuthUser:
+    properties:
+      bio:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      store_name:
+        type: string
+      store_slug:
+        type: string
+      username:
+        type: string
+      whatsapp_number:
+        type: string
+    type: object
+  dto.CreateProductRequest:
+    properties:
+      description:
+        maxLength: 1000
+        minLength: 1
+        type: string
+      name:
+        maxLength: 255
+        minLength: 1
+        type: string
+      price:
+        type: number
+    required:
+    - description
+    - name
+    - price
+    type: object
+  dto.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.ProductResponse:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  dto.SignUpRequest:
+    properties:
+      bio:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      store_name:
+        type: string
+      username:
+        type: string
+      whatsapp_number:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - store_name
+    - username
+    - whatsapp_number
+    type: object
+  dto.ToggleProductStatusRequest:
+    properties:
+      is_active:
+        type: boolean
+    type: object
+  dto.UpdateProductRequest:
+    properties:
+      description:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.User:
+    properties:
+      bio:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      role:
+        description: admin | vendor
+        type: string
+      store_name:
+        type: string
+      store_slug:
+        type: string
+      username:
+        type: string
+      whatsapp_number:
+        type: string
+    type: object
+  utils.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a vendor hub.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: VendorHub API
+  version: "1.0"
+paths:
+  /admin/vendors/{id}/approve:
+    post:
+      description: Approves a vendor with the given ID
+      parameters:
+      - description: Vendor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Approve a vendor
+      tags:
+      - Admin
+  /admin/vendors/approved:
+    get:
+      description: Lists all vendors that have been approved
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List approved vendors
+      tags:
+      - Admin
+  /admin/vendors/pending:
+    get:
+      description: Lists all vendors that are pending approval
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List pending vendors
+      tags:
+      - Admin
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user and returns a JWT token
+      parameters:
+      - description: Login Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Logs in a user
+      tags:
+      - Auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user with the provided details
+      parameters:
+      - description: Sign Up Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Sign up a new user
+      tags:
+      - Auth
+  /me:
+    get:
+      description: Get the profile of the currently logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthUser'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user profile
+      tags:
+      - Auth
+  /products:
+    get:
+      description: Retrieves a single product by its ID
+      parameters:
+      - description: Product ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get a product by ID
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Creates a new product for the authenticated vendor
+      parameters:
+      - description: Create Product Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      description: Deletes a product for the authenticated vendor
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a product
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing product for the authenticated vendor
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Product Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a product
+      tags:
+      - Products
+  /products/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Toggles a product's active status for the authenticated vendor
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Toggle Status Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ToggleProductStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Toggle a product's active status
+      tags:
+      - Products
+  /products/active:
+    get:
+      description: Retrieves all active products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get active products
+      tags:
+      - Products
+  /products/my:
+    get:
+      description: Retrieves all products for the currently authenticated vendor
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get authenticated vendor's products
+      tags:
+      - Products
+  /products/price:
+    get:
+      description: Retrieves products within a specified price range
+      parameters:
+      - description: Minimum Price
+        in: query
+        name: min
+        required: true
+        type: number
+      - description: Maximum Price
+        in: query
+        name: max
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get products by price range
+      tags:
+      - Products
+  /products/search:
+    get:
+      description: Searches for products by a search term
+      parameters:
+      - description: Search Term
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Search for products
+      tags:
+      - Products
+  /vendors/{id}/products:
+    get:
+      description: Retrieves all products for a specific vendor
+      parameters:
+      - description: Vendor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get a vendor's products
+      tags:
+      - Products
+  /vendors/{id}/products/active:
+    get:
+      description: Retrieves all active products for a specific vendor
+      parameters:
+      - description: Vendor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ProductResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Get active products for a vendor
+      tags:
+      - Products
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

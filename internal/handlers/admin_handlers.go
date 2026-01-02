@@ -18,6 +18,19 @@ func NewAdminHandler(admin *service.AdminService) *AdminHandler {
 	return &AdminHandler{adminService: admin}
 }
 
+// ApproveVendor godoc
+// @Summary      Approve a vendor
+// @Description  Approves a vendor with the given ID
+// @Tags         Admin
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        id   path      string  true  "Vendor ID"
+// @Success      204
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /admin/vendors/{id}/approve [post]
 func (h *AdminHandler) ApproveVendor(w http.ResponseWriter, r *http.Request) {
 	rctx := chi.RouteContext(r.Context())
 	if rctx != nil {
@@ -37,6 +50,17 @@ func (h *AdminHandler) ApproveVendor(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// ListPendingVendors godoc
+// @Summary      List pending vendors
+// @Description  Lists all vendors that are pending approval
+// @Tags         Admin
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Success      200  {array}   models.User
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /admin/vendors/pending [get]
 func (h *AdminHandler) ListPendingVendors(w http.ResponseWriter, r *http.Request) {
 	adminID, err := utils.GetUserIDFromContext(r.Context())
 	if err != nil {
@@ -51,6 +75,17 @@ func (h *AdminHandler) ListPendingVendors(w http.ResponseWriter, r *http.Request
 	utils.WriteJSON(w, http.StatusOK, vendors)
 }
 
+// ListApprovedVendors godoc
+// @Summary      List approved vendors
+// @Description  Lists all vendors that have been approved
+// @Tags         Admin
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Success      200  {array}   models.User
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /admin/vendors/approved [get]
 func (h *AdminHandler) ListApprovedVendors(w http.ResponseWriter, r *http.Request) {
 	adminID, err := utils.GetUserIDFromContext(r.Context())
 	if err != nil {

@@ -53,6 +53,11 @@ func (r *UpdateProductRequest) Validate() error {
 	return nil
 }
 
+// ToggleProductStatusRequest - Request body for toggling product status
+type ToggleProductStatusRequest struct {
+	IsActive bool `json:"is_active"`
+}
+
 // ProductResponse - Response body for product
 type ProductResponse struct {
 	ID          string  `json:"id"`
