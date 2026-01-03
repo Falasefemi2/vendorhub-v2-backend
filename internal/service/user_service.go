@@ -153,6 +153,7 @@ func (s *AuthService) GetMyProfile(id string) (*dto.AuthUser, error) {
 
 	return authUser, nil
 }
+
 func (s *AuthService) GetUserByID(id string) (*models.User, error) {
 	return s.userRepo.GetByID(id)
 }
@@ -216,12 +217,12 @@ func (s *AuthService) UpdateVendorStore(ctx context.Context, userID string, req 
 
 func (s *AuthService) GetAllActiveVendors(page, pageSize int) ([]*models.User, error) {
 	// This would need a repository method to fetch paginated active vendors
-	// For now, returning empty slice - implement based on your repository
+	// For now, returning empty slice - implement later
 	return []*models.User{}, nil
 }
 
 func (s *AuthService) SearchVendors(searchTerm string) ([]*models.User, error) {
-	// This would need a repository method to search vendors
-	// For now, returning empty slice - implement based on your repository
+	// This would need a repository method to search vedors
+	// For now, returning empty slice - implement later
 	return []*models.User{}, nil
 }

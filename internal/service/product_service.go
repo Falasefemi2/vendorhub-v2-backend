@@ -18,7 +18,6 @@ func NewProductService(repo *repository.ProductRepository) *ProductService {
 	return &ProductService{repo: repo}
 }
 
-// CreateProduct creates a new product
 func (ps *ProductService) CreateProduct(ctx context.Context, vendorID string, req dto.CreateProductRequest) (*dto.ProductResponse, error) {
 	if err := req.Validate(); err != nil {
 		return nil, fmt.Errorf("invalid request: %w", err)
@@ -40,7 +39,6 @@ func (ps *ProductService) CreateProduct(ctx context.Context, vendorID string, re
 	return mapProductToResponse(createdProduct), nil
 }
 
-// GetProduct retrieves a single product by ID
 func (ps *ProductService) GetProduct(ctx context.Context, productID string) (*dto.ProductResponse, error) {
 	if productID == "" {
 		return nil, fmt.Errorf("product ID cannot be empty")
@@ -60,7 +58,6 @@ func (ps *ProductService) GetProduct(ctx context.Context, productID string) (*dt
 	return mapProductToResponse(product), nil
 }
 
-// GetUserProducts retrieves all products for a user
 func (ps *ProductService) GetUserProducts(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
 	if userID == "" {
 		return nil, fmt.Errorf("user ID cannot be empty")
@@ -80,7 +77,6 @@ func (ps *ProductService) GetUserProducts(ctx context.Context, userID string) ([
 	return mapProductsToResponse(products), nil
 }
 
-// UpdateProduct updates an existing product
 func (ps *ProductService) UpdateProduct(ctx context.Context, productID string, vendorID string, req dto.UpdateProductRequest) (*dto.ProductResponse, error) {
 	if productID == "" || vendorID == "" {
 		return nil, fmt.Errorf("product ID and vendor ID cannot be empty")
@@ -92,7 +88,6 @@ func (ps *ProductService) UpdateProduct(ctx context.Context, productID string, v
 		defer cancel()
 	}
 
-	// Verify product exists and belongs to vendor
 	existingProduct, err := ps.repo.GetProductByID(ctx, productID)
 	if err != nil {
 		return nil, fmt.Errorf("product not found: %w", err)
@@ -102,7 +97,6 @@ func (ps *ProductService) UpdateProduct(ctx context.Context, productID string, v
 		return nil, fmt.Errorf("unauthorized: product does not belong to this vendor")
 	}
 
-	// Update only provided fields
 	if req.Name != nil && *req.Name != "" {
 		existingProduct.Name = *req.Name
 	}
@@ -124,7 +118,6 @@ func (ps *ProductService) UpdateProduct(ctx context.Context, productID string, v
 	return mapProductToResponse(updatedProduct), nil
 }
 
-// DeleteProduct deletes a product
 func (ps *ProductService) DeleteProduct(ctx context.Context, productID string, vendorID string) error {
 	if productID == "" || vendorID == "" {
 		return fmt.Errorf("product ID and vendor ID cannot be empty")
@@ -136,7 +129,6 @@ func (ps *ProductService) DeleteProduct(ctx context.Context, productID string, v
 		defer cancel()
 	}
 
-	// Verify product exists and belongs to vendor
 	product, err := ps.repo.GetProductByID(ctx, productID)
 	if err != nil {
 		return fmt.Errorf("product not found: %w", err)
@@ -149,7 +141,6 @@ func (ps *ProductService) DeleteProduct(ctx context.Context, productID string, v
 	return ps.repo.DeleteProduct(ctx, productID)
 }
 
-// GetActiveProducts retrieves all active products
 func (ps *ProductService) GetActiveProducts(ctx context.Context) ([]*dto.ProductResponse, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -165,7 +156,6 @@ func (ps *ProductService) GetActiveProducts(ctx context.Context) ([]*dto.Product
 	return mapProductsToResponse(products), nil
 }
 
-// GetActiveUserProducts retrieves all active products for a user
 func (ps *ProductService) GetActiveUserProducts(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
 	if userID == "" {
 		return nil, fmt.Errorf("user ID cannot be empty")
@@ -185,7 +175,6 @@ func (ps *ProductService) GetActiveUserProducts(ctx context.Context, userID stri
 	return mapProductsToResponse(products), nil
 }
 
-// ToggleProductStatus toggles a product's active status
 func (ps *ProductService) ToggleProductStatus(ctx context.Context, productID string, vendorID string, isActive bool) (*dto.ProductResponse, error) {
 	if productID == "" || vendorID == "" {
 		return nil, fmt.Errorf("product ID and vendor ID cannot be empty")
@@ -216,7 +205,6 @@ func (ps *ProductService) ToggleProductStatus(ctx context.Context, productID str
 	return mapProductToResponse(updated), nil
 }
 
-// SearchProducts searches for products by name or description
 func (ps *ProductService) SearchProducts(ctx context.Context, searchTerm string) ([]*dto.ProductResponse, error) {
 	if searchTerm == "" {
 		return nil, fmt.Errorf("search term cannot be empty")
@@ -236,7 +224,6 @@ func (ps *ProductService) SearchProducts(ctx context.Context, searchTerm string)
 	return mapProductsToResponse(products), nil
 }
 
-// GetProductsByPriceRange retrieves products within a price range
 func (ps *ProductService) GetProductsByPriceRange(ctx context.Context, minPrice, maxPrice float64) ([]*dto.ProductResponse, error) {
 	if minPrice < 0 || maxPrice < 0 || minPrice > maxPrice {
 		return nil, fmt.Errorf("invalid price range")
@@ -256,7 +243,6 @@ func (ps *ProductService) GetProductsByPriceRange(ctx context.Context, minPrice,
 	return mapProductsToResponse(products), nil
 }
 
-// Helper function to map product model to response DTO
 func mapProductToResponse(product *models.Product) *dto.ProductResponse {
 	return &dto.ProductResponse{
 		ID:          product.ID,
@@ -270,7 +256,6 @@ func mapProductToResponse(product *models.Product) *dto.ProductResponse {
 	}
 }
 
-// Helper function to map multiple products to response DTOs
 func mapProductsToResponse(products []*models.Product) []*dto.ProductResponse {
 	if len(products) == 0 {
 		return []*dto.ProductResponse{}
@@ -283,7 +268,6 @@ func mapProductsToResponse(products []*models.Product) []*dto.ProductResponse {
 	return responses
 }
 
-// GetProductsByUserID retrieves all products for a user (including inactive ones)
 func (ps *ProductService) GetProductsByUserID(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
 	if userID == "" {
 		return nil, fmt.Errorf("user ID cannot be empty")
@@ -303,7 +287,6 @@ func (ps *ProductService) GetProductsByUserID(ctx context.Context, userID string
 	return mapProductsToResponse(products), nil
 }
 
-// GetActiveProductsByUserID retrieves only active products for a user
 func (ps *ProductService) GetActiveProductsByUserID(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
 	if userID == "" {
 		return nil, fmt.Errorf("user ID cannot be empty")
@@ -320,7 +303,6 @@ func (ps *ProductService) GetActiveProductsByUserID(ctx context.Context, userID 
 		return nil, fmt.Errorf("failed to get products: %w", err)
 	}
 
-	// Filter for active products only
 	var activeProducts []*models.Product
 	for _, product := range products {
 		if product.IsActive {

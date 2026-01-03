@@ -166,7 +166,6 @@ func (sh *StoreHandler) UpdateMyStore(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// Update vendor's store info in users table
 	response, err := sh.userService.UpdateVendorStore(r.Context(), vendorID, req)
 	if err != nil {
 		utils.HandleServiceError(w, err)
@@ -207,21 +206,18 @@ func (sh *StoreHandler) GetMyStore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get vendor
 	vendor, err := sh.userService.GetUserByID(vendorID)
 	if err != nil {
 		utils.HandleServiceError(w, err)
 		return
 	}
 
-	// Get vendor's products
 	products, err := sh.productService.GetProductsByUserID(r.Context(), vendorID)
 	if err != nil {
 		utils.HandleServiceError(w, err)
 		return
 	}
 
-	// Build store response
 	response := &dto.StoreDetailsResponse{
 		Store: &dto.StoreResponse{
 			ID:             vendor.ID,
@@ -271,14 +267,12 @@ func (sh *StoreHandler) GetAllStores(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Get all active vendors (stores)
 	vendors, err := sh.userService.GetAllActiveVendors(page, pageSize)
 	if err != nil {
 		utils.HandleServiceError(w, err)
 		return
 	}
 
-	// Convert vendors to store responses
 	var storeResponses []*dto.StoreResponse
 	for _, vendor := range vendors {
 		storeResponses = append(storeResponses, &dto.StoreResponse{
@@ -314,14 +308,12 @@ func (sh *StoreHandler) SearchStores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Search vendors by store name or username
 	vendors, err := sh.userService.SearchVendors(searchTerm)
 	if err != nil {
 		utils.HandleServiceError(w, err)
 		return
 	}
 
-	// Convert to store responses
 	var storeResponses []*dto.StoreResponse
 	for _, vendor := range vendors {
 		storeResponses = append(storeResponses, &dto.StoreResponse{

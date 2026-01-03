@@ -21,7 +21,6 @@ func NewProductRepository(pool *pgxpool.Pool) *ProductRepository {
 	return &ProductRepository{pool: pool}
 }
 
-// CreateProduct creates a new product in the database
 func (pr *ProductRepository) CreateProduct(ctx context.Context, product *models.Product) (*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -65,7 +64,6 @@ func (pr *ProductRepository) CreateProduct(ctx context.Context, product *models.
 	return product, nil
 }
 
-// GetProductByID retrieves a product by its ID
 func (pr *ProductRepository) GetProductByID(ctx context.Context, productID string) (*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -101,7 +99,6 @@ func (pr *ProductRepository) GetProductByID(ctx context.Context, productID strin
 	return product, nil
 }
 
-// UpdateProduct updates an existing product
 func (pr *ProductRepository) UpdateProduct(ctx context.Context, product *models.Product) (*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -144,7 +141,6 @@ func (pr *ProductRepository) UpdateProduct(ctx context.Context, product *models.
 	return product, nil
 }
 
-// DeleteProduct deletes a product by ID
 func (pr *ProductRepository) DeleteProduct(ctx context.Context, productID string) error {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -166,7 +162,6 @@ func (pr *ProductRepository) DeleteProduct(ctx context.Context, productID string
 	return nil
 }
 
-// GetProductsByUserID retrieves all products for a specific user
 func (pr *ProductRepository) GetProductsByUserID(ctx context.Context, userID string) ([]*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -214,7 +209,6 @@ func (pr *ProductRepository) GetProductsByUserID(ctx context.Context, userID str
 	return products, nil
 }
 
-// GetActiveProductsByUserID retrieves all active products for a specific user
 func (pr *ProductRepository) GetActiveProductsByUserID(ctx context.Context, userID string) ([]*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -262,7 +256,6 @@ func (pr *ProductRepository) GetActiveProductsByUserID(ctx context.Context, user
 	return products, nil
 }
 
-// GetActiveProducts retrieves all active products
 func (pr *ProductRepository) GetActiveProducts(ctx context.Context) ([]*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -310,7 +303,6 @@ func (pr *ProductRepository) GetActiveProducts(ctx context.Context) ([]*models.P
 	return products, nil
 }
 
-// GetProductsByPriceRange retrieves products within a price range
 func (pr *ProductRepository) GetProductsByPriceRange(ctx context.Context, minPrice, maxPrice float64) ([]*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
@@ -358,7 +350,6 @@ func (pr *ProductRepository) GetProductsByPriceRange(ctx context.Context, minPri
 	return products, nil
 }
 
-// SearchProducts searches products by name or description
 func (pr *ProductRepository) SearchProducts(ctx context.Context, searchTerm string) ([]*models.Product, error) {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel context.CancelFunc
