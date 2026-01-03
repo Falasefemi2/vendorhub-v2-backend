@@ -1,8 +1,10 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"strconv"
+	"time"
 
 	"github.com/falasefemi2/vendorhub/internal/dto"
 	"github.com/falasefemi2/vendorhub/internal/models"
@@ -150,4 +152,76 @@ func (s *AuthService) GetMyProfile(id string) (*dto.AuthUser, error) {
 	}
 
 	return authUser, nil
+}
+func (s *AuthService) GetUserByID(id string) (*models.User, error) {
+	return s.userRepo.GetByID(id)
+}
+
+func (s *AuthService) GetVendorBySlug(slug string) (*models.User, error) {
+	return s.userRepo.GetByStoreSlug(slug)
+}
+
+func (s *AuthService) UpdateVendorStore(ctx context.Context, userID string, req dto.UpdateStoreRequest) (*dto.StoreResponse, error) {
+	user, err := s.userRepo.GetByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	storeName := user.StoreName
+	if req.StoreName != nil {
+		storeName = *req.StoreName
+	}
+
+	username := user.Username
+	if req.Username != nil {
+		username = *req.Username
+	}
+
+	bio := user.Bio
+	if req.Bio != nil {
+		bio = *req.Bio
+	}
+
+	whatsapp := user.WhatsappNumber
+	if req.WhatsappNumber != nil {
+		whatsapp = *req.WhatsappNumber
+	}
+
+	email := user.Email
+	if req.Email != nil {
+		email = *req.Email
+	}
+
+	storeSlug := utils.GenerateSlug(storeName)
+	if storeSlug == "" {
+		storeSlug = user.StoreSlug
+	}
+
+	err = s.userRepo.UpdateStoreSettings(userID, storeName, storeSlug, bio, whatsapp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.StoreResponse{
+		ID:             user.ID,
+		Name:           storeName,
+		Slug:           storeSlug,
+		Username:       username,
+		Bio:            bio,
+		WhatsappNumber: whatsapp,
+		Email:          email,
+		CreatedAt:      user.CreatedAt.Format(time.RFC3339),
+	}, nil
+}
+
+func (s *AuthService) GetAllActiveVendors(page, pageSize int) ([]*models.User, error) {
+	// This would need a repository method to fetch paginated active vendors
+	// For now, returning empty slice - implement based on your repository
+	return []*models.User{}, nil
+}
+
+func (s *AuthService) SearchVendors(searchTerm string) ([]*models.User, error) {
+	// This would need a repository method to search vendors
+	// For now, returning empty slice - implement based on your repository
+	return []*models.User{}, nil
 }

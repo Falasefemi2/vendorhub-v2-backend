@@ -282,3 +282,51 @@ func mapProductsToResponse(products []*models.Product) []*dto.ProductResponse {
 	}
 	return responses
 }
+
+// GetProductsByUserID retrieves all products for a user (including inactive ones)
+func (ps *ProductService) GetProductsByUserID(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
+	if userID == "" {
+		return nil, fmt.Errorf("user ID cannot be empty")
+	}
+
+	if _, ok := ctx.Deadline(); !ok {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, 10*time.Second)
+		defer cancel()
+	}
+
+	products, err := ps.repo.GetProductsByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get products: %w", err)
+	}
+
+	return mapProductsToResponse(products), nil
+}
+
+// GetActiveProductsByUserID retrieves only active products for a user
+func (ps *ProductService) GetActiveProductsByUserID(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
+	if userID == "" {
+		return nil, fmt.Errorf("user ID cannot be empty")
+	}
+
+	if _, ok := ctx.Deadline(); !ok {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, 10*time.Second)
+		defer cancel()
+	}
+
+	products, err := ps.repo.GetProductsByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get products: %w", err)
+	}
+
+	// Filter for active products only
+	var activeProducts []*models.Product
+	for _, product := range products {
+		if product.IsActive {
+			activeProducts = append(activeProducts, product)
+		}
+	}
+
+	return mapProductsToResponse(activeProducts), nil
+}

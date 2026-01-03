@@ -12,8 +12,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	_ "github.com/falasefemi2/vendorhub/docs"
 	httpSwagger "github.com/swaggo/http-swagger"
+
+	_ "github.com/falasefemi2/vendorhub/docs"
 
 	"github.com/falasefemi2/vendorhub/internal/config"
 	"github.com/falasefemi2/vendorhub/internal/db"
@@ -61,6 +62,8 @@ func main() {
 	productService := service.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
+	storeHandler := handlers.NewStoreHandler(authService, productService)
+
 	r := chi.NewRouter()
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -105,6 +108,34 @@ func main() {
 			r.Delete("/{id}", productHandler.DeleteProduct)
 			r.Put("/{id}/status", productHandler.ToggleProductStatus)
 			r.Get("/my", productHandler.GetUserProducts)
+		})
+	})
+
+	r.Route("/stores", func(r chi.Router) {
+		// Public store endpoints
+		// GET /stores - All vendors with stores
+		r.Get("/", storeHandler.GetAllStores)
+
+		// GET /stores/search?q=pizza - Search vendors
+		r.Get("/search", storeHandler.SearchStores)
+
+		// GET /stores/vendor?id={vendorId} - Get vendor's store by ID
+		r.Get("/vendor", storeHandler.GetStoreByVendorID)
+
+		// WHATSAPP SHAREABLE LINK ⭐
+		// GET /stores/@{store-slug} - Get vendor store + products by slug
+		// Example: GET /stores/@pizzahut-lagos
+		r.Get("/@{slug}", storeHandler.GetStoreBySlug)
+
+		// Protected store endpoints (vendor only)
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.JWTAuth)
+
+			// GET /stores/my - Get authenticated vendor's store with products
+			r.Get("/my", storeHandler.GetMyStore)
+
+			// PUT /stores/my - Update vendor's store info
+			r.Put("/my", storeHandler.UpdateMyStore)
 		})
 	})
 
