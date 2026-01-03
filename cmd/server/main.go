@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 
 	httpSwagger "github.com/swaggo/http-swagger"
 
@@ -146,9 +147,16 @@ func main() {
 		r.Get("/{id}/products/active", productHandler.GetActiveProducts)
 	})
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:3001"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+
 	server := &http.Server{
 		Addr:         ":8080",
-		Handler:      r,
+		Handler:      c.Handler(r),
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,
