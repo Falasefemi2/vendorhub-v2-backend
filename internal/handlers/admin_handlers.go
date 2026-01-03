@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	_ "github.com/falasefemi2/vendorhub/internal/dto"
 	"github.com/falasefemi2/vendorhub/internal/service"
 	"github.com/falasefemi2/vendorhub/internal/utils"
 )
@@ -56,7 +57,7 @@ func (h *AdminHandler) ApproveVendor(w http.ResponseWriter, r *http.Request) {
 // @Tags         Admin
 // @Produce      json
 // @Security     ApiKeyAuth
-// @Success      200  {array}   models.User
+// @Success      200  {array}   dto.AuthResponse
 // @Failure      401  {object}  utils.ErrorResponse
 // @Failure      403  {object}  utils.ErrorResponse
 // @Failure      500  {object}  utils.ErrorResponse
@@ -81,7 +82,7 @@ func (h *AdminHandler) ListPendingVendors(w http.ResponseWriter, r *http.Request
 // @Tags         Admin
 // @Produce      json
 // @Security     ApiKeyAuth
-// @Success      200  {array}   models.User
+// @Success      200  {array}   dto.AuthResponse
 // @Failure      401  {object}  utils.ErrorResponse
 // @Failure      403  {object}  utils.ErrorResponse
 // @Failure      500  {object}  utils.ErrorResponse

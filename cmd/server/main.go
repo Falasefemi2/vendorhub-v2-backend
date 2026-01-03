@@ -1,5 +1,6 @@
 package main
 
+//go:generate swag init --parseDependency --parseInternal -g cmd/server/main.go -d ./,./internal/handlers
 import (
 	"context"
 	"fmt"
@@ -125,7 +126,7 @@ func main() {
 		// WHATSAPP SHAREABLE LINK ⭐
 		// GET /stores/@{store-slug} - Get vendor store + products by slug
 		// Example: GET /stores/@pizzahut-lagos
-		r.Get("/@{slug}", storeHandler.GetStoreBySlug)
+		r.Get("/{slug}", storeHandler.GetStoreBySlug)
 
 		// Protected store endpoints (vendor only)
 		r.Group(func(r chi.Router) {

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -36,7 +37,7 @@ func NewStoreHandler(userService *service.AuthService, productService *service.P
 // @Failure      400  {object}  utils.ErrorResponse
 // @Failure      404  {object}  utils.ErrorResponse
 // @Failure      500  {object}  utils.ErrorResponse
-// @Router       /stores/@{slug} [get]
+// @Router       /stores/{slug} [get]
 func (sh *StoreHandler) GetStoreBySlug(w http.ResponseWriter, r *http.Request) {
 	slugName := chi.URLParam(r, "slug")
 	if slugName == "" {
@@ -150,6 +151,8 @@ func (sh *StoreHandler) UpdateMyStore(w http.ResponseWriter, r *http.Request) {
 		utils.HandleServiceError(w, err)
 		return
 	}
+
+	log.Printf("Role from context: %s", role)
 
 	if role != "vendor" {
 		utils.WriteError(w, http.StatusForbidden, "only vendors can update their store")

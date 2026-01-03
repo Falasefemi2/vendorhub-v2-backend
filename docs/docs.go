@@ -45,26 +45,26 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.User"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse"
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -91,26 +91,26 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.User"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse"
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -147,25 +147,25 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -191,7 +191,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginRequest"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.LoginRequest"
                         }
                     }
                 ],
@@ -199,25 +199,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -243,7 +243,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.SignUpRequest"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.SignUpRequest"
                         }
                     }
                 ],
@@ -251,19 +251,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -288,25 +288,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthUser"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthUser"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -335,25 +335,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProductResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -382,7 +382,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateProductRequest"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.CreateProductRequest"
                         }
                     }
                 ],
@@ -390,31 +390,31 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProductResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -436,14 +436,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -470,26 +470,26 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -527,20 +527,20 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -571,20 +571,20 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -622,7 +622,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateProductRequest"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UpdateProductRequest"
                         }
                     }
                 ],
@@ -630,37 +630,37 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProductResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -701,31 +701,31 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -763,7 +763,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ToggleProductStatusRequest"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ToggleProductStatusRequest"
                         }
                     }
                 ],
@@ -771,37 +771,349 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.ProductResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stores": {
+            "get": {
+                "description": "Retrieves all active vendor stores with pagination support",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get all vendor stores",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size (default: 20, max: 100)",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/my": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Retrieves the authenticated vendor's store and products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get authenticated vendor's store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Updates the authenticated vendor's store information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Update authenticated vendor's store",
+                "parameters": [
+                    {
+                        "description": "Update Store Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UpdateStoreRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/search": {
+            "get": {
+                "description": "Searches for vendor stores by name or username",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Search stores",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/vendor": {
+            "get": {
+                "description": "Retrieves vendor's store and products by vendor ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get store by vendor ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Vendor ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stores/{slug}": {
+            "get": {
+                "description": "Retrieves vendor's store and products by store slug (WhatsApp shareable link)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Stores"
+                ],
+                "summary": "Get store by slug",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Store slug (e.g., pizzahut-lagos)",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -832,26 +1144,26 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -882,26 +1194,26 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ProductResponse"
+                                "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.ErrorResponse"
+                            "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse"
                         }
                     }
                 }
@@ -909,18 +1221,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.AuthResponse": {
+        "github_com_falasefemi2_vendorhub_internal_dto.AuthResponse": {
             "type": "object",
             "properties": {
                 "token": {
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/dto.AuthUser"
+                    "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthUser"
                 }
             }
         },
-        "dto.AuthUser": {
+        "github_com_falasefemi2_vendorhub_internal_dto.AuthUser": {
             "type": "object",
             "properties": {
                 "bio": {
@@ -952,7 +1264,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.CreateProductRequest": {
+        "github_com_falasefemi2_vendorhub_internal_dto.CreateProductRequest": {
             "type": "object",
             "required": [
                 "description",
@@ -975,7 +1287,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LoginRequest": {
+        "github_com_falasefemi2_vendorhub_internal_dto.LoginRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -990,7 +1302,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ProductResponse": {
+        "github_com_falasefemi2_vendorhub_internal_dto.ProductResponse": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -1019,7 +1331,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.SignUpRequest": {
+        "github_com_falasefemi2_vendorhub_internal_dto.SignUpRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -1054,7 +1366,53 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.ToggleProductStatusRequest": {
+        "github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse"
+                    }
+                },
+                "store": {
+                    "$ref": "#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse"
+                },
+                "store_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_falasefemi2_vendorhub_internal_dto.StoreResponse": {
+            "type": "object",
+            "properties": {
+                "bio": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "whatsapp_number": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_falasefemi2_vendorhub_internal_dto.ToggleProductStatusRequest": {
             "type": "object",
             "properties": {
                 "is_active": {
@@ -1062,7 +1420,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UpdateProductRequest": {
+        "github_com_falasefemi2_vendorhub_internal_dto.UpdateProductRequest": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1079,35 +1437,16 @@ const docTemplate = `{
                 }
             }
         },
-        "models.User": {
+        "github_com_falasefemi2_vendorhub_internal_dto.UpdateStoreRequest": {
             "type": "object",
             "properties": {
                 "bio": {
                     "type": "string"
                 },
-                "created_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "is_active": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "role": {
-                    "description": "admin | vendor",
-                    "type": "string"
-                },
                 "store_name": {
-                    "type": "string"
-                },
-                "store_slug": {
                     "type": "string"
                 },
                 "username": {
@@ -1118,7 +1457,7 @@ const docTemplate = `{
                 }
             }
         },
-        "utils.ErrorResponse": {
+        "github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse": {
             "type": "object",
             "properties": {
                 "error": {

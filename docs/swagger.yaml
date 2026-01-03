@@ -1,13 +1,13 @@
 basePath: /
 definitions:
-  dto.AuthResponse:
+  github_com_falasefemi2_vendorhub_internal_dto.AuthResponse:
     properties:
       token:
         type: string
       user:
-        $ref: '#/definitions/dto.AuthUser'
+        $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthUser'
     type: object
-  dto.AuthUser:
+  github_com_falasefemi2_vendorhub_internal_dto.AuthUser:
     properties:
       bio:
         type: string
@@ -28,7 +28,7 @@ definitions:
       whatsapp_number:
         type: string
     type: object
-  dto.CreateProductRequest:
+  github_com_falasefemi2_vendorhub_internal_dto.CreateProductRequest:
     properties:
       description:
         maxLength: 1000
@@ -45,7 +45,7 @@ definitions:
     - name
     - price
     type: object
-  dto.LoginRequest:
+  github_com_falasefemi2_vendorhub_internal_dto.LoginRequest:
     properties:
       email:
         type: string
@@ -55,7 +55,7 @@ definitions:
     - email
     - password
     type: object
-  dto.ProductResponse:
+  github_com_falasefemi2_vendorhub_internal_dto.ProductResponse:
     properties:
       created_at:
         type: string
@@ -74,7 +74,7 @@ definitions:
       user_id:
         type: string
     type: object
-  dto.SignUpRequest:
+  github_com_falasefemi2_vendorhub_internal_dto.SignUpRequest:
     properties:
       bio:
         type: string
@@ -99,12 +99,42 @@ definitions:
     - username
     - whatsapp_number
     type: object
-  dto.ToggleProductStatusRequest:
+  github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
+        type: array
+      store:
+        $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse'
+      store_url:
+        type: string
+    type: object
+  github_com_falasefemi2_vendorhub_internal_dto.StoreResponse:
+    properties:
+      bio:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+      username:
+        type: string
+      whatsapp_number:
+        type: string
+    type: object
+  github_com_falasefemi2_vendorhub_internal_dto.ToggleProductStatusRequest:
     properties:
       is_active:
         type: boolean
     type: object
-  dto.UpdateProductRequest:
+  github_com_falasefemi2_vendorhub_internal_dto.UpdateProductRequest:
     properties:
       description:
         type: string
@@ -115,33 +145,20 @@ definitions:
       price:
         type: number
     type: object
-  models.User:
+  github_com_falasefemi2_vendorhub_internal_dto.UpdateStoreRequest:
     properties:
       bio:
         type: string
-      created_at:
-        type: string
       email:
         type: string
-      id:
-        type: string
-      is_active:
-        type: boolean
-      name:
-        type: string
-      role:
-        description: admin | vendor
-        type: string
       store_name:
-        type: string
-      store_slug:
         type: string
       username:
         type: string
       whatsapp_number:
         type: string
     type: object
-  utils.ErrorResponse:
+  github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse:
     properties:
       error:
         type: string
@@ -177,19 +194,19 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Approve a vendor
@@ -205,20 +222,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse'
             type: array
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: List approved vendors
@@ -234,20 +251,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.User'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse'
             type: array
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: List pending vendors
@@ -264,26 +281,26 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.LoginRequest'
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.AuthResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Logs in a user
       tags:
       - Auth
@@ -298,22 +315,22 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.SignUpRequest'
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.SignUpRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.AuthResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Sign up a new user
       tags:
       - Auth
@@ -326,19 +343,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.AuthUser'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.AuthUser'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Get user profile
@@ -359,19 +376,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProductResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Get a product by ID
       tags:
       - Products
@@ -385,30 +402,30 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateProductRequest'
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.CreateProductRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.ProductResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Create a new product
@@ -435,23 +452,23 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Delete a product
@@ -472,34 +489,34 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.UpdateProductRequest'
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UpdateProductRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProductResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Update a product
@@ -521,34 +538,34 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.ToggleProductStatusRequest'
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ToggleProductStatusRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProductResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Toggle a product's active status
@@ -564,12 +581,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Get active products
       tags:
       - Products
@@ -583,20 +600,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       security:
       - ApiKeyAuth: []
       summary: Get authenticated vendor's products
@@ -623,16 +640,16 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Get products by price range
       tags:
       - Products
@@ -652,19 +669,223 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Search for products
       tags:
       - Products
+  /stores:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves all active vendor stores with pagination support
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 20, max: 100)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      summary: Get all vendor stores
+      tags:
+      - Stores
+  /stores/{slug}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves vendor's store and products by store slug (WhatsApp shareable
+        link)
+      parameters:
+      - description: Store slug (e.g., pizzahut-lagos)
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      summary: Get store by slug
+      tags:
+      - Stores
+  /stores/my:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the authenticated vendor's store and products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get authenticated vendor's store
+      tags:
+      - Stores
+    put:
+      consumes:
+      - application/json
+      description: Updates the authenticated vendor's store information
+      parameters:
+      - description: Update Store Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UpdateStoreRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update authenticated vendor's store
+      tags:
+      - Stores
+  /stores/search:
+    get:
+      consumes:
+      - application/json
+      description: Searches for vendor stores by name or username
+      parameters:
+      - description: Search term
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      summary: Search stores
+      tags:
+      - Stores
+  /stores/vendor:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves vendor's store and products by vendor ID
+      parameters:
+      - description: Vendor ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.StoreDetailsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      summary: Get store by vendor ID
+      tags:
+      - Stores
   /vendors/{id}/products:
     get:
       description: Retrieves all products for a specific vendor
@@ -681,20 +902,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Get a vendor's products
       tags:
       - Products
@@ -714,20 +935,20 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/dto.ProductResponse'
+              $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductResponse'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.ErrorResponse'
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
       summary: Get active products for a vendor
       tags:
       - Products
