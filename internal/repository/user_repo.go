@@ -27,7 +27,7 @@ func (r *UserRepository) CreateUser(user *models.User) (*models.User, error) {
 	query := `
 		INSERT INTO users (id, name, email, password_hash, whatsapp_number, username, bio, store_name, store_slug, role, is_active, created_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-		RETURNING id, name, email, username, role, is_active, created_at
+		RETURNING id, name, email, username, whatsapp_number, bio, store_name, store_slug, role, is_active, created_at
 	`
 
 	err := r.pool.QueryRow(
@@ -45,7 +45,7 @@ func (r *UserRepository) CreateUser(user *models.User) (*models.User, error) {
 		user.Role,
 		user.IsActive,
 		user.CreatedAt,
-	).Scan(&user.ID, &user.Name, &user.Email, &user.Username, &user.Role, &user.IsActive, &user.CreatedAt)
+	).Scan(&user.ID, &user.Name, &user.Email, &user.Username, &user.WhatsappNumber, &user.Bio, &user.StoreName, &user.StoreSlug, &user.Role, &user.IsActive, &user.CreatedAt)
 	if err != nil {
 		return nil, err
 	}

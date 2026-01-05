@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/falasefemi2/vendorhub/internal/dto"
@@ -18,6 +19,7 @@ type UserRepository interface {
 	ApproveVendor(id string) error
 	GetByStoreSlug(slug string) (*models.User, error)
 	UpdateStoreSettings(userID, storeName, storeSlug, bio, whatsapp string) error
+	GetApprovedVendors() ([]models.User, error)
 }
 
 type AuthService struct {
@@ -216,13 +218,57 @@ func (s *AuthService) UpdateVendorStore(ctx context.Context, userID string, req 
 }
 
 func (s *AuthService) GetAllActiveVendors(page, pageSize int) ([]*models.User, error) {
-	// This would need a repository method to fetch paginated active vendors
-	// For now, returning empty slice - implement later
-	return []*models.User{}, nil
+	if page <= 0 {
+		page = 1
+	}
+	if pageSize <= 0 {
+		pageSize = 20
+	}
+
+	vendors, err := s.userRepo.GetApprovedVendors()
+	if err != nil {
+		return nil, err
+	}
+
+	// convert to []*models.User
+	vendorPtrs := make([]*models.User, len(vendors))
+	for i := range vendors {
+		vendorPtrs[i] = &vendors[i]
+	}
+
+	// pagination
+	start := (page - 1) * pageSize
+	if start >= len(vendorPtrs) {
+		return []*models.User{}, nil
+	}
+	end := start + pageSize
+	if end > len(vendorPtrs) {
+		end = len(vendorPtrs)
+	}
+
+	return vendorPtrs[start:end], nil
 }
 
 func (s *AuthService) SearchVendors(searchTerm string) ([]*models.User, error) {
-	// This would need a repository method to search vedors
-	// For now, returning empty slice - implement later
-	return []*models.User{}, nil
+	if strings.TrimSpace(searchTerm) == "" {
+		return []*models.User{}, nil
+	}
+
+	vendors, err := s.userRepo.GetApprovedVendors()
+	if err != nil {
+		return nil, err
+	}
+
+	lower := strings.ToLower(searchTerm)
+	var results []*models.User
+	for i := range vendors {
+		v := &vendors[i]
+		if strings.Contains(strings.ToLower(v.StoreName), lower) ||
+			strings.Contains(strings.ToLower(v.Username), lower) ||
+			strings.Contains(strings.ToLower(v.Name), lower) {
+			results = append(results, v)
+		}
+	}
+
+	return results, nil
 }
