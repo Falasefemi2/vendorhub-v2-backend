@@ -163,7 +163,7 @@ definitions:
       error:
         type: string
     type: object
-host: https://vendorhub-v2-backend-2.onrender.com
+host: vendorhub-v2-backend-2.onrender.com
 info:
   contact:
     email: support@swagger.io

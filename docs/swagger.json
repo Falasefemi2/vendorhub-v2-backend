@@ -18,7 +18,7 @@
         },
         "version": "1.0"
     },
-    "host": "https://vendorhub-v2-backend-2.onrender.com",
+    "host": "vendorhub-v2-backend-2.onrender.com",
     "basePath": "/",
     "paths": {
         "/admin/vendors/approved": {
