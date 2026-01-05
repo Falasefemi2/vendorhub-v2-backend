@@ -1478,9 +1478,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "https://vendorhub-v2-backend-2.onrender.com",
 	BasePath:         "/",
-	Schemes:          []string{},
+	Schemes:          []string{"https"},
 	Title:            "VendorHub API",
 	Description:      "This is a sample server for a vendor hub.",
 	InfoInstanceName: "swagger",

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -29,6 +30,8 @@ import (
 // @title VendorHub API
 // @version 1.0
 // @description This is a sample server for a vendor hub.
+// @host https://vendorhub-v2-backend-2.onrender.com
+// @schemes https
 // @termsOfService http://swagger.io/terms/
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
@@ -146,8 +149,23 @@ func main() {
 		r.Get("/{id}/products/active", productHandler.GetActiveProducts)
 	})
 
+	// Build CORS allowed origins
+	allowedOrigins := []string{
+		"http://localhost:3000",
+		"http://localhost:3001",
+		"https://vendorhub-v2-frontend.vercel.app", // Remove trailing slash
+	}
+
+	// Add production origins from environment variable (comma-separated)
+	if prodOrigins := os.Getenv("ALLOWED_ORIGINS"); prodOrigins != "" {
+		origins := strings.Split(prodOrigins, ",")
+		for _, origin := range origins {
+			allowedOrigins = append(allowedOrigins, strings.TrimSpace(origin))
+		}
+	}
+
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost:3001", "https://vendorhub-v2-frontend.vercel.app/"},
+		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,

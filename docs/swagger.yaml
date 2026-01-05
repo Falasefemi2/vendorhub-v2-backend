@@ -163,7 +163,7 @@ definitions:
       error:
         type: string
     type: object
-host: localhost:8080
+host: https://vendorhub-v2-backend-2.onrender.com
 info:
   contact:
     email: support@swagger.io
@@ -952,6 +952,8 @@ paths:
       summary: Get active products for a vendor
       tags:
       - Products
+schemes:
+- https
 securityDefinitions:
   ApiKeyAuth:
     in: header
