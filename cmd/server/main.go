@@ -25,6 +25,7 @@ import (
 	"github.com/falasefemi2/vendorhub/internal/middleware"
 	"github.com/falasefemi2/vendorhub/internal/repository"
 	"github.com/falasefemi2/vendorhub/internal/service"
+	"github.com/falasefemi2/vendorhub/internal/storage"
 )
 
 // @title VendorHub API
@@ -63,8 +64,24 @@ func main() {
 	adminHandler := handlers.NewAdminHandler(adminService)
 
 	productRepo := repository.NewProductRepository(pool)
-	productService := service.NewProductService(productRepo)
-	productHandler := handlers.NewProductHandler(productService)
+
+	// Initialize storage
+	uploadDir := os.Getenv("UPLOAD_DIR")
+	if uploadDir == "" {
+		uploadDir = "./uploads"
+	}
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		baseURL = "http://localhost:8080"
+	}
+
+	localStorage, err := storage.NewLocalStorage(uploadDir, baseURL+"/uploads")
+	if err != nil {
+		panic(fmt.Errorf("failed to initialize storage: %w", err))
+	}
+
+	productService := service.NewProductService(productRepo, localStorage)
+	productHandler := handlers.NewProductHandler(productService, localStorage)
 
 	storeHandler := handlers.NewStoreHandler(authService, productService)
 
@@ -77,6 +94,9 @@ func main() {
 	})
 
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
+
+	// Serve uploaded images
+	r.Handle("/uploads/*", http.StripPrefix("/uploads", http.FileServer(http.Dir(uploadDir))))
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/signup", authHandler.SignUp)
@@ -112,6 +132,18 @@ func main() {
 			r.Delete("/{id}", productHandler.DeleteProduct)
 			r.Put("/{id}/status", productHandler.ToggleProductStatus)
 			r.Get("/my", productHandler.GetUserProducts)
+
+			// Product image operations
+			r.Post("/{productId}/images", productHandler.UploadProductImage)
+		})
+	})
+
+	// Image management routes (vendor-only)
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.JWTAuth)
+		r.Route("/images", func(r chi.Router) {
+			r.Delete("/{imageId}", productHandler.DeleteProductImage)
+			r.Put("/{imageId}/position", productHandler.UpdateProductImagePosition)
 		})
 	})
 

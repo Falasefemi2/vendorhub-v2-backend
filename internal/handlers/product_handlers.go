@@ -3,20 +3,24 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 
 	"github.com/falasefemi2/vendorhub/internal/dto"
+	"github.com/falasefemi2/vendorhub/internal/models"
 	"github.com/falasefemi2/vendorhub/internal/service"
+	"github.com/falasefemi2/vendorhub/internal/storage"
 	"github.com/falasefemi2/vendorhub/internal/utils"
 )
 
 type ProductHandler struct {
 	service *service.ProductService
+	storage storage.Storage
 }
 
-func NewProductHandler(service *service.ProductService) *ProductHandler {
-	return &ProductHandler{service: service}
+func NewProductHandler(service *service.ProductService, storage storage.Storage) *ProductHandler {
+	return &ProductHandler{service: service, storage: storage}
 }
 
 // CreateProduct godoc
@@ -69,7 +73,7 @@ func (ph *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) 
 
 // GetProduct godoc
 // @Summary      Get a product by ID
-// @Description  Retrieves a single product by its ID
+// @Description  Retrieves a single product by its ID with images
 // @Tags         Products
 // @Produce      json
 // @Param        id   query      string  true  "Product ID"
@@ -85,7 +89,7 @@ func (ph *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := ph.service.GetProduct(r.Context(), productID)
+	response, err := ph.service.GetProductWithImages(r.Context(), productID)
 	if err != nil {
 		utils.HandleServiceError(w, err)
 		return
@@ -443,4 +447,204 @@ func (ph *ProductHandler) GetProductsByPriceRange(w http.ResponseWriter, r *http
 	}
 
 	utils.WriteJSON(w, http.StatusOK, responses)
+}
+
+// UploadProductImage godoc
+// @Summary      Upload an image for a product
+// @Description  Uploads a new image for a product
+// @Tags         ProductImages
+// @Accept       multipart/form-data
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        productId path string true "Product ID"
+// @Param        image formData file true "Image file"
+// @Param        position formData integer false "Image position"
+// @Success      201  {object}  dto.UploadProductImageResponse
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /products/{productId}/images [post]
+func (ph *ProductHandler) UploadProductImage(w http.ResponseWriter, r *http.Request) {
+	productID := chi.URLParam(r, "productId")
+	if productID == "" {
+		utils.WriteError(w, http.StatusBadRequest, "product id is required")
+		return
+	}
+
+	vendorID, err := utils.GetUserIDFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	role, err := utils.GetRoleFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	if role != "vendor" {
+		utils.WriteError(w, http.StatusForbidden, "only vendors can upload product images")
+		return
+	}
+
+	// Parse multipart form with max 10MB size
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, "failed to parse form data")
+		return
+	}
+
+	// Get image file
+	file, handler, err := r.FormFile("image")
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, "image file is required")
+		return
+	}
+	defer file.Close()
+
+	// Get position from form (optional, defaults to 0)
+	position := 0
+	if posStr := r.FormValue("position"); posStr != "" {
+		if pos, err := strconv.Atoi(posStr); err == nil && pos >= 0 {
+			position = pos
+		}
+	}
+
+	// Save file
+	filename, err := ph.storage.SaveFile(r.Context(), handler)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// Create image record
+	imageReq := &dto.UploadProductImageRequest{Position: position}
+	productImage := &models.ProductImage{
+		ImageURL: filename,
+	}
+
+	response, err := ph.service.CreateProductImage(r.Context(), productID, vendorID, imageReq, productImage)
+	if err != nil {
+		// Clean up file if database operation fails
+		ph.storage.DeleteFile(r.Context(), filename)
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	// Add full URL to response
+	response.ImageURL = ph.storage.GetURL(filename)
+
+	utils.WriteJSON(w, http.StatusCreated, response)
+}
+
+// DeleteProductImage godoc
+// @Summary      Delete a product image
+// @Description  Deletes an image from a product
+// @Tags         ProductImages
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        imageId path string true "Image ID"
+// @Success      200  {object}  map[string]string
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /images/{imageId} [delete]
+func (ph *ProductHandler) DeleteProductImage(w http.ResponseWriter, r *http.Request) {
+	imageID := chi.URLParam(r, "imageId")
+	if imageID == "" {
+		utils.WriteError(w, http.StatusBadRequest, "image id is required")
+		return
+	}
+
+	vendorID, err := utils.GetUserIDFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	role, err := utils.GetRoleFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	if role != "vendor" {
+		utils.WriteError(w, http.StatusForbidden, "only vendors can delete product images")
+		return
+	}
+
+	err = ph.service.DeleteProductImage(r.Context(), imageID, vendorID)
+	if err != nil {
+		if err.Error() == "unauthorized: image does not belong to this vendor" {
+			utils.WriteError(w, http.StatusForbidden, err.Error())
+			return
+		}
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, map[string]string{"message": "image deleted successfully"})
+}
+
+// UpdateProductImagePosition godoc
+// @Summary      Update product image position
+// @Description  Changes the position/order of a product image
+// @Tags         ProductImages
+// @Accept       json
+// @Produce      json
+// @Security     ApiKeyAuth
+// @Param        imageId path string true "Image ID"
+// @Param        body body dto.UploadProductImageRequest true "Position Request"
+// @Success      200  {object}  map[string]string
+// @Failure      400  {object}  utils.ErrorResponse
+// @Failure      401  {object}  utils.ErrorResponse
+// @Failure      403  {object}  utils.ErrorResponse
+// @Failure      404  {object}  utils.ErrorResponse
+// @Failure      500  {object}  utils.ErrorResponse
+// @Router       /images/{imageId}/position [put]
+func (ph *ProductHandler) UpdateProductImagePosition(w http.ResponseWriter, r *http.Request) {
+	imageID := chi.URLParam(r, "imageId")
+	if imageID == "" {
+		utils.WriteError(w, http.StatusBadRequest, "image id is required")
+		return
+	}
+
+	vendorID, err := utils.GetUserIDFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	role, err := utils.GetRoleFromContext(r.Context())
+	if err != nil {
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	if role != "vendor" {
+		utils.WriteError(w, http.StatusForbidden, "only vendors can update product images")
+		return
+	}
+
+	var req dto.UploadProductImageRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	defer r.Body.Close()
+
+	err = ph.service.UpdateProductImagePosition(r.Context(), imageID, vendorID, req.Position)
+	if err != nil {
+		if err.Error() == "unauthorized: image does not belong to this vendor" {
+			utils.WriteError(w, http.StatusForbidden, err.Error())
+			return
+		}
+		utils.HandleServiceError(w, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, map[string]string{"message": "image position updated successfully"})
 }

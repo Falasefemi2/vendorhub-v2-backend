@@ -54,12 +54,29 @@ type ToggleProductStatusRequest struct {
 }
 
 type ProductResponse struct {
-	ID          string  `json:"id"`
-	UserID      string  `json:"user_id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-	IsActive    bool    `json:"is_active"`
-	CreatedAt   string  `json:"created_at"`
-	UpdatedAt   string  `json:"updated_at"`
+	ID          string                  `json:"id"`
+	UserID      string                  `json:"user_id"`
+	Name        string                  `json:"name"`
+	Description string                  `json:"description"`
+	Price       float64                 `json:"price"`
+	IsActive    bool                    `json:"is_active"`
+	Images      []*ProductImageResponse `json:"images"`
+	CreatedAt   string                  `json:"created_at"`
+	UpdatedAt   string                  `json:"updated_at"`
+}
+
+type ProductImageResponse struct {
+	ID       string `json:"id"`
+	ImageURL string `json:"image_url"`
+	Position int    `json:"position"`
+}
+
+type UploadProductImageRequest struct {
+	Position int `json:"position" binding:"min=0"`
+}
+
+type UploadProductImageResponse struct {
+	ID       string `json:"id"`
+	ImageURL string `json:"image_url"`
+	Position int    `json:"position"`
 }

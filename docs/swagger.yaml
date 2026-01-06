@@ -55,6 +55,15 @@ definitions:
     - email
     - password
     type: object
+  github_com_falasefemi2_vendorhub_internal_dto.ProductImageResponse:
+    properties:
+      id:
+        type: string
+      image_url:
+        type: string
+      position:
+        type: integer
+    type: object
   github_com_falasefemi2_vendorhub_internal_dto.ProductResponse:
     properties:
       created_at:
@@ -63,6 +72,10 @@ definitions:
         type: string
       id:
         type: string
+      images:
+        items:
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.ProductImageResponse'
+        type: array
       is_active:
         type: boolean
       name:
@@ -157,6 +170,21 @@ definitions:
         type: string
       whatsapp_number:
         type: string
+    type: object
+  github_com_falasefemi2_vendorhub_internal_dto.UploadProductImageRequest:
+    properties:
+      position:
+        minimum: 0
+        type: integer
+    type: object
+  github_com_falasefemi2_vendorhub_internal_dto.UploadProductImageResponse:
+    properties:
+      id:
+        type: string
+      image_url:
+        type: string
+      position:
+        type: integer
     type: object
   github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse:
     properties:
@@ -334,6 +362,96 @@ paths:
       summary: Sign up a new user
       tags:
       - Auth
+  /images/{imageId}:
+    delete:
+      description: Deletes an image from a product
+      parameters:
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a product image
+      tags:
+      - ProductImages
+  /images/{imageId}/position:
+    put:
+      consumes:
+      - application/json
+      description: Changes the position/order of a product image
+      parameters:
+      - description: Image ID
+        in: path
+        name: imageId
+        required: true
+        type: string
+      - description: Position Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UploadProductImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update product image position
+      tags:
+      - ProductImages
   /me:
     get:
       description: Get the profile of the currently logged-in user
@@ -363,7 +481,7 @@ paths:
       - Auth
   /products:
     get:
-      description: Retrieves a single product by its ID
+      description: Retrieves a single product by its ID with images
       parameters:
       - description: Product ID
         in: query
@@ -571,6 +689,58 @@ paths:
       summary: Toggle a product's active status
       tags:
       - Products
+  /products/{productId}/images:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads a new image for a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: Image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      - description: Image position
+        in: formData
+        name: position
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_dto.UploadProductImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_falasefemi2_vendorhub_internal_utils.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Upload an image for a product
+      tags:
+      - ProductImages
   /products/active:
     get:
       description: Retrieves all active products
