@@ -281,7 +281,7 @@ func (ps *ProductService) enrichProductResponseWithImages(ctx context.Context, r
 		// Don't fail if we can't get images, just return without images
 		return nil
 	}
-	response.Images = mapProductImagesToResponse(images)
+	response.Images = ps.mapProductImagesToResponse(images)
 	return nil
 }
 
@@ -370,7 +370,7 @@ func (ps *ProductService) GetProductWithImages(ctx context.Context, productID st
 		return product, nil
 	}
 
-	product.Images = mapProductImagesToResponse(images)
+	product.Images = ps.mapProductImagesToResponse(images)
 	return product, nil
 }
 
@@ -402,7 +402,7 @@ func (ps *ProductService) CreateProductImage(ctx context.Context, productID stri
 		return nil, fmt.Errorf("failed to create product image: %w", err)
 	}
 
-	return mapProductImageToResponse(createdImage), nil
+	return ps.mapProductImageToResponse(createdImage), nil
 }
 
 // DeleteProductImage removes an image file and database record
@@ -466,22 +466,24 @@ func (ps *ProductService) UpdateProductImagePosition(ctx context.Context, imageI
 	return ps.repo.UpdateProductImagePosition(ctx, imageID, newPosition)
 }
 
-func mapProductImageToResponse(image *models.ProductImage) *dto.ProductImageResponse {
+// mapProductImageToResponse maps a models.ProductImage to a DTO, converting stored
+// filename to a full accessible URL using the configured storage.
+func (ps *ProductService) mapProductImageToResponse(image *models.ProductImage) *dto.ProductImageResponse {
 	return &dto.ProductImageResponse{
 		ID:       image.ID,
-		ImageURL: image.ImageURL,
+		ImageURL: ps.storage.GetURL(image.ImageURL),
 		Position: image.Position,
 	}
 }
 
-func mapProductImagesToResponse(images []*models.ProductImage) []*dto.ProductImageResponse {
+func (ps *ProductService) mapProductImagesToResponse(images []*models.ProductImage) []*dto.ProductImageResponse {
 	if len(images) == 0 {
 		return []*dto.ProductImageResponse{}
 	}
 
 	responses := make([]*dto.ProductImageResponse, len(images))
 	for i, image := range images {
-		responses[i] = mapProductImageToResponse(image)
+		responses[i] = ps.mapProductImageToResponse(image)
 	}
 	return responses
 }

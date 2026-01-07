@@ -158,7 +158,7 @@ func main() {
 		// GET /stores/vendor?id={vendorId} - Get vendor's store by ID
 		r.Get("/vendor", storeHandler.GetStoreByVendorID)
 
-		// WHATSAPP SHAREABLE LINK ⭐
+		// WHATSAPP SHAREABLE LINK
 		// GET /stores/@{store-slug} - Get vendor store + products by slug
 		// Example: GET /stores/@pizzahut-lagos
 		r.Get("/{slug}", storeHandler.GetStoreBySlug)
