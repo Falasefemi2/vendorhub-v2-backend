@@ -470,8 +470,9 @@ func (ps *ProductService) UpdateProductImagePosition(ctx context.Context, imageI
 // filename to a full accessible URL using the configured storage.
 func (ps *ProductService) mapProductImageToResponse(image *models.ProductImage) *dto.ProductImageResponse {
 	return &dto.ProductImageResponse{
-		ID:       image.ID,
-		ImageURL: ps.storage.GetURL(image.ImageURL),
+		ID: image.ID,
+		// ImageURL: ps.storage.GetURL(image.ImageURL),
+		ImageURL: image.ImageURL,
 		Position: image.Position,
 	}
 }

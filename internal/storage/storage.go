@@ -89,9 +89,10 @@ func (ss *SupabaseStorage) SaveFile(ctx context.Context, file *multipart.FileHea
 	// Log upload success (useful for debugging in production)
 	fmt.Printf("info: uploaded file to Supabase bucket=%s filename=%s\n", ss.bucket, filename)
 
-	// Return the stored filename. `GetURL` responsibility is to produce
-	// the public URL when needed (the service layer calls `GetURL`).
-	return filename, nil
+	// Return the FULL PUBLIC URL (not just the filename)
+	publicURL := ss.GetURL(filename)
+	fmt.Printf("info: public URL=%s\n", publicURL)
+	return publicURL, nil
 }
 
 // DeleteFile removes a file from Supabase storage
@@ -148,3 +149,4 @@ func (ss *SupabaseStorage) SetMaxFileSize(size int64) {
 		ss.maxFileSize = size
 	}
 }
+
