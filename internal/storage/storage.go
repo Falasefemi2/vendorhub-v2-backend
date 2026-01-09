@@ -86,8 +86,12 @@ func (ss *SupabaseStorage) SaveFile(ctx context.Context, file *multipart.FileHea
 		return "", fmt.Errorf("failed to upload file to Supabase: %w", err)
 	}
 
-	// Return the public URL
-	return ss.GetURL(filename), nil
+	// Log upload success (useful for debugging in production)
+	fmt.Printf("info: uploaded file to Supabase bucket=%s filename=%s\n", ss.bucket, filename)
+
+	// Return the stored filename. `GetURL` responsibility is to produce
+	// the public URL when needed (the service layer calls `GetURL`).
+	return filename, nil
 }
 
 // DeleteFile removes a file from Supabase storage
