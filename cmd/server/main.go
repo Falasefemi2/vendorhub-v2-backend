@@ -65,23 +65,18 @@ func main() {
 
 	productRepo := repository.NewProductRepository(pool)
 
-	// Initialize storage
-	uploadDir := os.Getenv("UPLOAD_DIR")
-	if uploadDir == "" {
-		uploadDir = "./uploads"
-	}
-	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "http://localhost:8080"
-	}
+	// Initialize Supabase storage
+	supabaseURL := config.GetSupabaseURL()
+	supabaseKey := config.GetSupabaseKey()
+	supabaseBucket := config.GetSupabaseBucket()
 
-	localStorage, err := storage.NewLocalStorage(uploadDir, baseURL+"/uploads")
+	supabaseStorage, err := storage.NewSupabaseStorage(supabaseURL, supabaseKey, supabaseBucket)
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize storage: %w", err))
+		panic(fmt.Errorf("failed to initialize Supabase storage: %w", err))
 	}
 
-	productService := service.NewProductService(productRepo, localStorage)
-	productHandler := handlers.NewProductHandler(productService, localStorage)
+	productService := service.NewProductService(productRepo, supabaseStorage)
+	productHandler := handlers.NewProductHandler(productService, supabaseStorage)
 
 	storeHandler := handlers.NewStoreHandler(authService, productService)
 
@@ -94,9 +89,6 @@ func main() {
 	})
 
 	r.Get("/swagger/*", httpSwagger.WrapHandler)
-
-	// Serve uploaded images
-	r.Handle("/uploads/*", http.StripPrefix("/uploads", http.FileServer(http.Dir(uploadDir))))
 
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/signup", authHandler.SignUp)

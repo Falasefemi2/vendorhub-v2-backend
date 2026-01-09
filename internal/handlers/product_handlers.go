@@ -512,29 +512,26 @@ func (ph *ProductHandler) UploadProductImage(w http.ResponseWriter, r *http.Requ
 		}
 	}
 
-	// Save file
-	filename, err := ph.storage.SaveFile(r.Context(), handler)
+	// Save file to Supabase and get public URL
+	imageURL, err := ph.storage.SaveFile(r.Context(), handler)
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// Create image record
+	// Create image record with the public URL
 	imageReq := &dto.UploadProductImageRequest{Position: position}
 	productImage := &models.ProductImage{
-		ImageURL: filename,
+		ImageURL: imageURL, // This is now the full public URL from Supabase
 	}
 
 	response, err := ph.service.CreateProductImage(r.Context(), productID, vendorID, imageReq, productImage)
 	if err != nil {
 		// Clean up file if database operation fails
-		ph.storage.DeleteFile(r.Context(), filename)
+		ph.storage.DeleteFile(r.Context(), imageURL)
 		utils.HandleServiceError(w, err)
 		return
 	}
-
-	// Add full URL to response
-	response.ImageURL = ph.storage.GetURL(filename)
 
 	utils.WriteJSON(w, http.StatusCreated, response)
 }

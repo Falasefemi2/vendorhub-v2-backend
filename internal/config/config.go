@@ -24,3 +24,27 @@ func GetDBURL() string {
 	}
 	return dbURL
 }
+
+func GetSupabaseURL() string {
+	url := os.Getenv("SUPABASE_URL")
+	if url == "" {
+		panic("SUPABASE_URL environment variable is not set")
+	}
+	return url
+}
+
+func GetSupabaseKey() string {
+	key := os.Getenv("SUPABASE_KEY")
+	if key == "" {
+		panic("SUPABASE_KEY environment variable is not set")
+	}
+	return key
+}
+
+func GetSupabaseBucket() string {
+	bucket := os.Getenv("SUPABASE_BUCKET")
+	if bucket == "" {
+		return "products" // Default bucket name
+	}
+	return bucket
+}
