@@ -83,11 +83,13 @@ func (ss *SupabaseStorage) SaveFile(ctx context.Context, file *multipart.FileHea
 	// Upload to Supabase Storage
 	_, err = ss.client.Storage.UploadFile(ss.bucket, filename, src)
 	if err != nil {
+		fmt.Printf("error: failed to upload file to Supabase bucket=%s filename=%s error=%v\n", ss.bucket, filename, err)
 		return "", fmt.Errorf("failed to upload file to Supabase: %w", err)
 	}
 
 	// Log upload success (useful for debugging in production)
 	fmt.Printf("info: uploaded file to Supabase bucket=%s filename=%s\n", ss.bucket, filename)
+	fmt.Printf("info: Supabase client initialized successfully\n")
 
 	// Return the FULL PUBLIC URL (not just the filename)
 	publicURL := ss.GetURL(filename)
@@ -149,4 +151,3 @@ func (ss *SupabaseStorage) SetMaxFileSize(size int64) {
 		ss.maxFileSize = size
 	}
 }
-
