@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"fmt"
+	"path"
+	"strings"
 	"time"
 
 	"github.com/falasefemi2/vendorhub/internal/dto"
@@ -390,10 +392,27 @@ func (ps *ProductService) CreateProductImage(ctx context.Context, productID stri
 		return nil, fmt.Errorf("unauthorized: product does not belong to this vendor")
 	}
 
-	// Create the image record in database
+	// Normalize image URL before creating the DB record
+	// If it's already a full URL, keep it. If it's a local uploads path or filename, convert to Supabase public URL.
+	var imageURL string
+	if strings.HasPrefix(file.ImageURL, "http://") || strings.HasPrefix(file.ImageURL, "https://") {
+		if strings.Contains(file.ImageURL, "/uploads/") {
+			// Extract filename from backend uploads path and convert
+			imageURL = ps.storage.GetURL(path.Base(file.ImageURL))
+		} else if strings.Contains(file.ImageURL, "/storage/v1/object/public/") {
+			// Already a Supabase public URL
+			imageURL = file.ImageURL
+		} else {
+			imageURL = file.ImageURL
+		}
+	} else {
+		// Assume it's a filename or relative path
+		imageURL = ps.storage.GetURL(path.Base(file.ImageURL))
+	}
+
 	image := &models.ProductImage{
 		ProductID: productID,
-		ImageURL:  file.ImageURL,
+		ImageURL:  imageURL,
 		Position:  req.Position,
 	}
 
