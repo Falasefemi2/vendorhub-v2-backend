@@ -17,7 +17,7 @@ import (
 
 	httpSwagger "github.com/swaggo/http-swagger"
 
-	_ "github.com/falasefemi2/vendorhub/docs"
+	docs "github.com/falasefemi2/vendorhub/docs"
 
 	"github.com/falasefemi2/vendorhub/internal/config"
 	"github.com/falasefemi2/vendorhub/internal/db"
@@ -82,6 +82,25 @@ func main() {
 	productHandler := handlers.NewProductHandler(productService, supabaseStorage)
 
 	storeHandler := handlers.NewStoreHandler(authService, productService)
+
+	// Configure Swagger host/schemes at runtime so local testing uses localhost:8080
+	baseURL := os.Getenv("BASE_URL")
+	if baseURL == "" {
+		// running locally
+		docs.SwaggerInfo.Host = "localhost:8080"
+		docs.SwaggerInfo.Schemes = []string{"http"}
+	} else {
+		// remove scheme and trailing slash
+		host := strings.TrimPrefix(baseURL, "https://")
+		host = strings.TrimPrefix(host, "http://")
+		host = strings.TrimSuffix(host, "/")
+		docs.SwaggerInfo.Host = host
+		if strings.HasPrefix(baseURL, "https://") {
+			docs.SwaggerInfo.Schemes = []string{"https"}
+		} else {
+			docs.SwaggerInfo.Schemes = []string{"http"}
+		}
+	}
 
 	r := chi.NewRouter()
 

@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+	"log"
 	"mime/multipart"
 	"path/filepath"
 	"strings"
@@ -32,10 +33,16 @@ type SupabaseStorage struct {
 
 // NewSupabaseStorage creates a new Supabase storage instance
 func NewSupabaseStorage(url, key, bucket string) (*SupabaseStorage, error) {
+	fmt.Printf("[DEBUG] Initializing Supabase storage client with URL=%s, bucket=%s\n", url, bucket)
+
 	client, err := supabase.NewClient(url, key, nil)
 	if err != nil {
+		fmt.Printf("[ERROR] Failed to initialize Supabase client: %v\n", err)
 		return nil, fmt.Errorf("failed to initialize Supabase client: %w", err)
 	}
+
+	fmt.Printf("[DEBUG] Supabase client initialized successfully\n")
+	fmt.Printf("[DEBUG] Client Storage interface: %T\n", client.Storage)
 
 	return &SupabaseStorage{
 		client:      client,
@@ -79,21 +86,30 @@ func (ss *SupabaseStorage) SaveFile(ctx context.Context, file *multipart.FileHea
 
 	// Generate unique filename
 	filename := generateUniqueFilename(ext)
+	log.Printf("[DEBUG] Generated filename: %s", filename)
+	log.Printf("[DEBUG] Supabase URL: %s, Bucket: %s", ss.supabaseURL, ss.bucket)
 
 	// Upload to Supabase Storage
-	_, err = ss.client.Storage.UploadFile(ss.bucket, filename, src)
+	log.Printf("[DEBUG] Starting Supabase upload to bucket=%s with filename=%s", ss.bucket, filename)
+	uploadResult, err := ss.client.Storage.UploadFile(ss.bucket, filename, src)
 	if err != nil {
-		fmt.Printf("error: failed to upload file to Supabase bucket=%s filename=%s error=%v\n", ss.bucket, filename, err)
+		log.Printf("[ERROR] Supabase upload failed: bucket=%s filename=%s error=%v error_type=%T", ss.bucket, filename, err, err)
+		log.Printf("[ERROR] Full error details: %+v", err)
 		return "", fmt.Errorf("failed to upload file to Supabase: %w", err)
 	}
 
-	// Log upload success (useful for debugging in production)
-	fmt.Printf("info: uploaded file to Supabase bucket=%s filename=%s\n", ss.bucket, filename)
-	fmt.Printf("info: Supabase client initialized successfully\n")
+	log.Printf("[DEBUG] Supabase upload response: %+v", uploadResult)
+	log.Printf("[DEBUG] Response Key field: %v", uploadResult.Key)
 
 	// Return the FULL PUBLIC URL (not just the filename)
 	publicURL := ss.GetURL(filename)
-	fmt.Printf("info: public URL=%s\n", publicURL)
+	log.Printf("[INFO] Constructed public URL: %s", publicURL)
+
+	// Verify URL format
+	if !strings.HasPrefix(publicURL, "https://") {
+		log.Printf("[WARN] Public URL doesn't start with https://: %s", publicURL)
+	}
+
 	return publicURL, nil
 }
 
