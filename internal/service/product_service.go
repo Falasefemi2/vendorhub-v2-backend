@@ -326,7 +326,10 @@ func (ps *ProductService) GetProductsByUserID(ctx context.Context, userID string
 		return nil, fmt.Errorf("failed to get products: %w", err)
 	}
 
-	return mapProductsToResponse(products), nil
+	responses := mapProductsToResponse(products)
+	// Enrich responses with images
+	_ = ps.enrichProductResponsesWithImages(ctx, responses)
+	return responses, nil
 }
 
 func (ps *ProductService) GetActiveProductsByUserID(ctx context.Context, userID string) ([]*dto.ProductResponse, error) {
@@ -352,7 +355,10 @@ func (ps *ProductService) GetActiveProductsByUserID(ctx context.Context, userID 
 		}
 	}
 
-	return mapProductsToResponse(activeProducts), nil
+	responses := mapProductsToResponse(activeProducts)
+	// Enrich responses with images
+	_ = ps.enrichProductResponsesWithImages(ctx, responses)
+	return responses, nil
 }
 
 // GetProductWithImages retrieves a product with its images

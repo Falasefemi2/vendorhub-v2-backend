@@ -67,7 +67,7 @@ func (sh *StoreHandler) GetStoreBySlug(w http.ResponseWriter, r *http.Request) {
 			CreatedAt:      vendor.CreatedAt.Format(time.RFC3339),
 		},
 		Products: products,
-		StoreURL: "https://localhost:3000/stores/" + vendor.StoreSlug,
+		StoreURL: "https://vendorhub-v2-frontend.vercel.app/stores/" + vendor.StoreSlug,
 	}
 
 	utils.WriteJSON(w, http.StatusOK, response)
@@ -119,7 +119,7 @@ func (sh *StoreHandler) GetStoreByVendorID(w http.ResponseWriter, r *http.Reques
 			CreatedAt:      vendor.CreatedAt.Format(time.RFC3339),
 		},
 		Products: products,
-		StoreURL: "https://localhost:3000/stores/" + vendor.StoreSlug,
+		StoreURL: "https://vendorhub-v2-frontend.vercel.app/stores/" + vendor.StoreSlug,
 	}
 
 	utils.WriteJSON(w, http.StatusOK, response)
@@ -230,7 +230,7 @@ func (sh *StoreHandler) GetMyStore(w http.ResponseWriter, r *http.Request) {
 			CreatedAt:      vendor.CreatedAt.Format(time.RFC3339),
 		},
 		Products: products,
-		StoreURL: "https://localhost:3000/stores/" + vendor.StoreSlug,
+		StoreURL: "https://vendorhub-v2-frontend.vercel.app/stores/" + vendor.StoreSlug,
 	}
 
 	utils.WriteJSON(w, http.StatusOK, response)

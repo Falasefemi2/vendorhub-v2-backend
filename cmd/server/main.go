@@ -70,13 +70,11 @@ func main() {
 	supabaseKey := config.GetSupabaseKey()
 	supabaseBucket := config.GetSupabaseBucket()
 
-	fmt.Printf("info: Initializing Supabase storage with URL=%s, bucket=%s\n", supabaseURL, supabaseBucket)
 	supabaseStorage, err := storage.NewSupabaseStorage(supabaseURL, supabaseKey, supabaseBucket)
 	if err != nil {
 		fmt.Printf("error: failed to initialize Supabase storage: %v\n", err)
 		panic(fmt.Errorf("failed to initialize Supabase storage: %w", err))
 	}
-	fmt.Println("info: Supabase storage initialized successfully")
 
 	productService := service.NewProductService(productRepo, supabaseStorage)
 	productHandler := handlers.NewProductHandler(productService, supabaseStorage)
