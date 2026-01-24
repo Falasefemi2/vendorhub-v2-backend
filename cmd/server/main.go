@@ -20,6 +20,7 @@ import (
 	docs "github.com/falasefemi2/vendorhub/docs"
 
 	"github.com/falasefemi2/vendorhub/internal/config"
+	"github.com/falasefemi2/vendorhub/internal/cron"
 	"github.com/falasefemi2/vendorhub/internal/db"
 	"github.com/falasefemi2/vendorhub/internal/handlers"
 	"github.com/falasefemi2/vendorhub/internal/middleware"
@@ -47,6 +48,8 @@ func main() {
 	config.Load()
 	connString := config.GetDBURL()
 	ctx := context.Background()
+
+	cron.StartCronJobs()
 
 	pool, err := db.ConnectAndMigrate(ctx, connString)
 	if err != nil {
